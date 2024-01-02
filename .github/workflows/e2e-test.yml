@@ -19,3 +19,9 @@ jobs:
 
     - name: Test with coverage
       run: go test -v -cover -timeout 5m -coverpkg=./... -parallel 1 -covermode=atomic -gcflags=all=-l $(go list ./test/e2e/...) -coverprofile=coverage.txt
+
+    - name: Upload coverage reports to Codecov
+      run: |
+        curl -Os https://uploader.codecov.io/latest/linux/codecov
+        chmod +x codecov
+        ./codecov -t ${CODECOV_TOKEN}
