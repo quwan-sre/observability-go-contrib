@@ -1,4 +1,7 @@
 # Go Contrib
+
+![ci](https://github.com/quwan-sre/observability-go-contrib/actions/workflows/e2e-test/badge.svg) [![codecov](https://codecov.io/gh/quwan-sre/observability-go-contrib/graph/badge.svg?token=SQMXEVX0R4)](https://codecov.io/gh/quwan-sre/observability-go-contrib)
+
 为 Go Packages 提供可观测性的扩展插件。
 
 ## 目标与边界
