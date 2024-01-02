@@ -7,7 +7,6 @@ on:
     branches: [ "master" ]
 
 jobs:
-
   e2e-test:
     runs-on: ubuntu-latest
     steps:
@@ -19,5 +18,4 @@ jobs:
         go-version: '1.16'
 
     - name: Test with coverage
-      working-directory: ./go-contrib
       run: go test -v -cover -timeout 5m -coverpkg=./... -parallel 1 -covermode=atomic -gcflags=all=-l $(go list ./test/e2e/...) -coverprofile=coverage.txt
