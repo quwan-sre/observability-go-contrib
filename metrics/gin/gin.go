@@ -30,10 +30,10 @@ func NewMetricsMiddleware() gin.HandlerFunc {
 		}
 
 		common.DefaultRPCReceiveRequestMetric.With(prometheus.Labels{
-			"sdk":              common.SDKGin,
-			"request_protocol": common.RequestProtocolHTTP,
+			"sdk":              common.RPCSDKGin,
+			"request_protocol": common.RPCProtocolHTTP,
 			"endpoint":         endpoint,
-			"status":           common.StatusSuccess,
+			"status":           common.RPCStatusSuccess,
 			"response_code":    strconv.Itoa(responseCode),
 		}).Observe(latency.Seconds())
 		return
