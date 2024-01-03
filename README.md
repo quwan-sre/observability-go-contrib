@@ -17,6 +17,14 @@
 ## 接入使用
 请阅读具体扩展插件目录下的 `README.md` 了解如何使用，如 `go-contrib/metrics/gin/README.md` 提供了对 `github.com/gin-gonic/gin` HTTP 框架 metrics 插装的指引。
 
+### Metrics 定义
+#### RPC Metrics
+目前提供 RPC 调用的通用 Metrics：
+- `apm_rpc_receive_request_duration_seconds`；
+- `apm_rpc_send_request_duration_seconds`。
+
+他们的定义及包含 Labels 可以查看 [rpc_metrics.go](./metrics/common/rpc_metrics.go)
+
 ## Go Packages 支持列表
 
 | 分类    | Package | 数据类型 & 稳定性状态                                                                                  | 
