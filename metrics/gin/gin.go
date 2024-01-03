@@ -3,7 +3,7 @@ package gin
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/prometheus/client_golang/prometheus"
-	"gitlab.ttyuyin.com/observability/go-contrib/metrics/common"
+	"github.com/quwan-sre/observability-go-contrib/metrics/common"
 	"strconv"
 	"time"
 )

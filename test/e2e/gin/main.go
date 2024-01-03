@@ -3,7 +3,7 @@ package gin
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	metrics "gitlab.ttyuyin.com/observability/go-contrib/metrics/gin"
+	metrics "github.com/quwan-sre/observability-go-contrib/metrics/gin"
 )
 
 func main() {

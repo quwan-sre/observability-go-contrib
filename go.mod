@@ -1,4 +1,4 @@
-module gitlab.ttyuyin.com/observability/go-contrib
+module github.com/quwan-sre/observability-go-contrib
 
 go 1.16
 
