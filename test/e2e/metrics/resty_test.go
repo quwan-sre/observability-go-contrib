@@ -2,11 +2,13 @@ package metrics
 
 import (
 	"fmt"
-	"github.com/go-resty/resty/v2"
-	metrics "github.com/quwan-sre/observability-go-contrib/metrics/resty"
 	"io"
 	"net/http"
 	"testing"
+
+	"github.com/go-resty/resty/v2"
+
+	metrics "github.com/quwan-sre/observability-go-contrib/metrics/resty"
 )
 
 func TestRestyClient(t *testing.T) {

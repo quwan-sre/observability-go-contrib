@@ -36,8 +36,8 @@ func NewMetricsMiddleware() gin.HandlerFunc {
 			"sdk":              common.RPCSDKGin,
 			"request_protocol": common.RPCProtocolHTTP,
 			"endpoint":         endpoint,
-			"rpc_status":       strconv.Itoa(int(grpc.OK)),
-			"response_code":    strconv.Itoa(responseCode),
+			"rpc_status_code":  strconv.Itoa(int(grpc.OK)),
+			"http_status_code": strconv.Itoa(responseCode),
 		}).Observe(latency.Seconds())
 		return
 	}

@@ -9,6 +9,9 @@ import (
 const (
 	DefaultRPCReceiveRequestMetricName = "apm_rpc_receive_request_duration_seconds"
 	DefaultRPCSendRequestMetricName    = "apm_rpc_send_request_duration_seconds"
+
+	DefaultGRPCReceiveMessageTotalName = "apm_grpc_receive_message_total"
+	DefaultGRPCSendMessageTotalName    = "apm_grpc_send_message_total"
 )
 
 var (
@@ -20,7 +23,7 @@ var (
 		NativeHistogramMinResetDuration: 5 * time.Minute,
 		NativeHistogramMaxZeroThreshold: 0.05,
 		NativeHistogramMaxBucketNumber:  20,
-	}, []string{"sdk", "request_protocol", "endpoint", "rpc_status", "response_code"})
+	}, []string{"sdk", "request_protocol", "endpoint", "rpc_status_code", "http_status_code"})
 
 	DefaultRPCSendRequestMetric = prometheus.NewHistogramVec(prometheus.HistogramOpts{
 		Name:                            DefaultRPCSendRequestMetricName,
@@ -30,11 +33,12 @@ var (
 		NativeHistogramMinResetDuration: 5 * time.Minute,
 		NativeHistogramMaxZeroThreshold: 0.05,
 		NativeHistogramMaxBucketNumber:  20,
-	}, []string{"sdk", "request_protocol", "endpoint", "rpc_status", "response_code"})
+	}, []string{"sdk", "request_protocol", "endpoint", "rpc_status_code", "http_status_code"})
 )
 
 func init() {
 	prometheus.MustRegister(
+		// common request
 		DefaultRPCReceiveRequestMetric,
 		DefaultRPCSendRequestMetric,
 	)
