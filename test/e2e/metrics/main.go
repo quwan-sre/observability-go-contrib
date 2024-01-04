@@ -5,9 +5,15 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 
 	metrics "github.com/quwan-sre/observability-go-contrib/metrics/gin"
+	"github.com/quwan-sre/observability-go-contrib/test/e2e/metrics/grpc_server"
 )
 
 func main() {
+	go runGinServer()
+	go grpc_server.RunGRPCServer()
+}
+
+func runGinServer() {
 	r := gin.Default()
 
 	r.Use(metrics.NewMetricsMiddleware())

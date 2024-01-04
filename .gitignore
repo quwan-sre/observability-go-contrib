@@ -25,4 +25,4 @@ go.work
 # test output
 coverage-diff.html
 coverage-diff.xml
-coverage.txt
+coverage*.*
