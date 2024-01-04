@@ -1,8 +1,9 @@
 package common
 
 import (
-	"github.com/prometheus/client_golang/prometheus"
 	"time"
+
+	"github.com/prometheus/client_golang/prometheus"
 )
 
 const (
@@ -19,7 +20,7 @@ var (
 		NativeHistogramMinResetDuration: 5 * time.Minute,
 		NativeHistogramMaxZeroThreshold: 0.05,
 		NativeHistogramMaxBucketNumber:  20,
-	}, []string{"sdk", "request_protocol", "endpoint", "status", "response_code"})
+	}, []string{"sdk", "request_protocol", "endpoint", "rpc_status", "response_code"})
 
 	DefaultRPCSendRequestMetric = prometheus.NewHistogramVec(prometheus.HistogramOpts{
 		Name:                            DefaultRPCSendRequestMetricName,
@@ -29,7 +30,7 @@ var (
 		NativeHistogramMinResetDuration: 5 * time.Minute,
 		NativeHistogramMaxZeroThreshold: 0.05,
 		NativeHistogramMaxBucketNumber:  20,
-	}, []string{"sdk", "request_protocol", "endpoint", "status", "response_code"})
+	}, []string{"sdk", "request_protocol", "endpoint", "rpc_status", "response_code"})
 )
 
 func init() {
