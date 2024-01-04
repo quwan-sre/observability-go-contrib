@@ -1,12 +1,8 @@
 package common
 
 const (
-	RPCSDKGin = "github.com/gin-gonic/gin"
-)
-
-const (
-	RPCStatusSuccess = "0"
-	RPCStatusError   = "1"
+	RPCSDKGin   = "github.com/gin-gonic/gin"
+	RPCSDKResty = "github.com/go-resty/resty/v2"
 )
 
 const (

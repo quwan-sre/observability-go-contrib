@@ -1,11 +1,14 @@
 package gin
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/prometheus/client_golang/prometheus"
-	"github.com/quwan-sre/observability-go-contrib/metrics/common"
 	"strconv"
 	"time"
+
+	"github.com/gin-gonic/gin"
+	"github.com/prometheus/client_golang/prometheus"
+	grpc "google.golang.org/grpc/codes"
+
+	"github.com/quwan-sre/observability-go-contrib/metrics/common"
 )
 
 func NewMetricsMiddleware() gin.HandlerFunc {
@@ -33,7 +36,7 @@ func NewMetricsMiddleware() gin.HandlerFunc {
 			"sdk":              common.RPCSDKGin,
 			"request_protocol": common.RPCProtocolHTTP,
 			"endpoint":         endpoint,
-			"status":           common.RPCStatusSuccess,
+			"rpc_status":       strconv.Itoa(int(grpc.OK)),
 			"response_code":    strconv.Itoa(responseCode),
 		}).Observe(latency.Seconds())
 		return

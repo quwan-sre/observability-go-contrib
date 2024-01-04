@@ -2,10 +2,11 @@ package gin
 
 import (
 	"fmt"
-	"github.com/go-resty/resty/v2"
 	"net/http"
 	"testing"
 	"time"
+
+	"github.com/go-resty/resty/v2"
 )
 
 var (
