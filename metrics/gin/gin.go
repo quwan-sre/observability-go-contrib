@@ -3,7 +3,7 @@ package gin
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/prometheus/client_golang/prometheus"
-	"gitlab.ttyuyin.com/observability/go-contrib/metrics/common"
+	"github.com/quwan-sre/observability-go-contrib/metrics/common"
 	"strconv"
 	"time"
 )
@@ -30,10 +30,10 @@ func NewMetricsMiddleware() gin.HandlerFunc {
 		}
 
 		common.DefaultRPCReceiveRequestMetric.With(prometheus.Labels{
-			"sdk":              common.SDKGin,
-			"request_protocol": common.RequestProtocolHTTP,
+			"sdk":              common.RPCSDKGin,
+			"request_protocol": common.RPCProtocolHTTP,
 			"endpoint":         endpoint,
-			"status":           common.StatusSuccess,
+			"status":           common.RPCStatusSuccess,
 			"response_code":    strconv.Itoa(responseCode),
 		}).Observe(latency.Seconds())
 		return

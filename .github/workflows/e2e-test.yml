@@ -1,4 +1,4 @@
-name: Go
+name: Build & Test
 
 on:
   push:
@@ -18,7 +18,7 @@ jobs:
         go-version: '1.16'
 
     - name: Test with coverage
-      run: go test -v -cover -timeout 5m -coverpkg=./... -parallel 1 -covermode=atomic -gcflags=all=-l $(go list ./test/e2e/...) -coverprofile=coverage.txt
+      run: go test -v -cover -timeout 5m -coverpkg=./... -parallel 1 -covermode=atomic -gcflags=all=-l $(go list ./test/...) -coverprofile=coverage.txt
 
     - name: Upload coverage reports to Codecov
       run: |
