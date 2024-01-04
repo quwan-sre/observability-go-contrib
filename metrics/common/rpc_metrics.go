@@ -1,6 +1,7 @@
 package common
 
 import (
+	"math/rand"
 	"time"
 
 	"github.com/prometheus/client_golang/prometheus"
@@ -9,9 +10,6 @@ import (
 const (
 	DefaultRPCReceiveRequestMetricName = "apm_rpc_receive_request_duration_seconds"
 	DefaultRPCSendRequestMetricName    = "apm_rpc_send_request_duration_seconds"
-
-	DefaultGRPCReceiveMessageTotalName = "apm_grpc_receive_message_total"
-	DefaultGRPCSendMessageTotalName    = "apm_grpc_send_message_total"
 )
 
 var (
@@ -42,4 +40,13 @@ func init() {
 		DefaultRPCReceiveRequestMetric,
 		DefaultRPCSendRequestMetric,
 	)
+
+	go func() {
+		for {
+			// reset all metrics every 25-35 minutes
+			time.Sleep(time.Duration(25+rand.Intn(10)) * time.Minute)
+			DefaultRPCReceiveRequestMetric.Reset()
+			DefaultRPCSendRequestMetric.Reset()
+		}
+	}()
 }
