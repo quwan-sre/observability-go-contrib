@@ -23,7 +23,7 @@ jobs:
     - name: Filter unnecessary codes coverage
       run: |
         cat coverage_full.txt | grep -v "github.com/quwan-sre/observability-go-contrib/test" > coverage.txt
-        mv coverage_full.txt full.txt.bak
+        rm coverage_full.txt
 
     - name: Upload coverage reports to Codecov
       run: |
