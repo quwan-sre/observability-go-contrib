@@ -1,6 +1,9 @@
 # Go Contrib
 
-![ci](https://github.com/quwan-sre/observability-go-contrib/actions/workflows/e2e-test.yml/badge.svg) [![codecov](https://codecov.io/gh/quwan-sre/observability-go-contrib/graph/badge.svg?token=SQMXEVX0R4)](https://codecov.io/gh/quwan-sre/observability-go-contrib)
+[![CI](https://github.com/quwan-sre/observability-go-contrib/actions/workflows/e2e-test.yml/badge.svg)](https://github.com/quwan-sre/observability-go-contrib/actions?query=branch%3Amaster)
+[![codecov](https://codecov.io/gh/quwan-sre/observability-go-contrib/graph/badge.svg?token=SQMXEVX0R4)](https://codecov.io/gh/quwan-sre/observability-go-contrib)
+[![PkgGoDev](https://pkg.go.dev/badge/github.com/quwan-sre/observability-go-contrib)](https://pkg.go.dev/github.com/quwan-sre/observability-go-contrib)
+[![Go Report Card](https://goreportcard.com/badge/github.com/quwan-sre/observability-go-contrib)](https://goreportcard.com/report/github.com/quwan-sre/observability-go-contrib)
 
 为 Go Packages 提供可观测性的扩展插件。
 
@@ -27,9 +30,12 @@
 
 ## Go Packages 支持列表
 
-| 分类    | Package | 数据类型 & 稳定性状态                                                                                  | 
-|-------|---------|-----------------------------------------------------------------------------------------------|
-| HTTP  | `github.com/gin-gonic/gin` | dev: [metrics](https://gitlab.ttyuyin.com/observability/go-contrib/-/blob/master/metrics/gin) |
-| Kafka | `github.com/Shopify/sarama` | todo: metrics                                                                                 |
-| MongoDB | `go.mongodb.org/mongo-driver` | todo: metrics                                                                                 |
-| Redis | `github.com/go-redis/redis` | todo: metrics                                                                                 |
+| 分类    | Package                      | 数据类型  & 稳定性状态                                                                                |
+|---------|------------------------------|--------------------------------------------------------------------------------------------------|
+| HTTP    | github.com/gin-gonic/gin     | dev:  [metrics](https://gitlab.ttyuyin.com/observability/go-contrib/-/blob/master/metrics/gin)   |
+| HTTP    | github.com/go-resty/resty/v2 | dev:  [metrics](https://gitlab.ttyuyin.com/observability/go-contrib/-/blob/master/metrics/resty) |
+| RPC     | google.golang.org/grpc       | dev:  [metrics](https://gitlab.ttyuyin.com/observability/go-contrib/-/blob/master/metrics/grpc)  |
+| Redis   | github.com/go-redis/redis/v9 | todo: metrics                                                                                    |
+| Kafka   | github.com/Shopify/sarama    | todo: metrics                                                                                    |
+| MongoDB | go.mongodb.org/mongo-driver  | todo: metrics                                                                                    |
+| etcd    | go.etcd.io/etcd/client/v3    | todo: metrics                                                                                    |
