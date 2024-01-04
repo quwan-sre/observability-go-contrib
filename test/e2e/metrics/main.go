@@ -3,13 +3,14 @@ package metrics
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"github.com/quwan-sre/observability-go-contrib/test/e2e/metrics/grpc_server"
 
 	metrics "github.com/quwan-sre/observability-go-contrib/metrics/gin"
 )
 
 func main() {
 	go runGinServer()
-	go runGRPCServer()
+	go grpc_server.RunGRPCServer()
 }
 
 func runGinServer() {

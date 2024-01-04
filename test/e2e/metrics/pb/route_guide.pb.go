@@ -4,7 +4,7 @@
 // 	protoc        v3.12.4
 // source: route_guide.proto
 
-package grpc_server
+package pb
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"

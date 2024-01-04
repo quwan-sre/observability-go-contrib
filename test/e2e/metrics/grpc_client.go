@@ -8,7 +8,7 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/quwan-sre/observability-go-contrib/test/e2e/metrics/grpc_server"
+	"github.com/quwan-sre/observability-go-contrib/test/e2e/metrics/pb"
 )
 
 var (
@@ -16,19 +16,19 @@ var (
 )
 
 // printFeature gets the feature for the given point.
-func printFeature(client grpc_server.RouteGuideClient, point *grpc_server.Point) {
+func printFeature(client pb.RouteGuideClient, point *pb.Point) {
 	log.Printf("Getting feature for point (%d, %d)", point.Latitude, point.Longitude)
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	feature, err := client.GetFeature(ctx, point)
 	if err != nil {
-		log.Fatalf("client.GetFeature failed: %v", err)
+		log.Printf("client.GetFeature failed: %v", err)
 	}
 	log.Println(feature)
 }
 
 // printFeatures lists all the features within the given bounding Rectangle.
-func printFeatures(client grpc_server.RouteGuideClient, rect *grpc_server.Rectangle) {
+func printFeatures(client pb.RouteGuideClient, rect *pb.Rectangle) {
 	log.Printf("Looking for features within %v", rect)
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
@@ -50,11 +50,11 @@ func printFeatures(client grpc_server.RouteGuideClient, rect *grpc_server.Rectan
 }
 
 // runRecordRoute sends a sequence of points to server and expects to get a RouteSummary from server.
-func runRecordRoute(client grpc_server.RouteGuideClient) {
+func runRecordRoute(client pb.RouteGuideClient) {
 	// Create a random number of random points
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	pointCount := int(r.Int31n(100)) + 2 // Traverse at least two points
-	var points []*grpc_server.Point
+	var points []*pb.Point
 	for i := 0; i < pointCount; i++ {
 		points = append(points, randomPoint(r))
 	}
@@ -78,14 +78,14 @@ func runRecordRoute(client grpc_server.RouteGuideClient) {
 }
 
 // runRouteChat receives a sequence of route notes, while sending notes for various locations.
-func runRouteChat(client grpc_server.RouteGuideClient) {
-	notes := []*grpc_server.RouteNote{
-		{Location: &grpc_server.Point{Latitude: 0, Longitude: 1}, Message: "First message"},
-		{Location: &grpc_server.Point{Latitude: 0, Longitude: 2}, Message: "Second message"},
-		{Location: &grpc_server.Point{Latitude: 0, Longitude: 3}, Message: "Third message"},
-		{Location: &grpc_server.Point{Latitude: 0, Longitude: 1}, Message: "Fourth message"},
-		{Location: &grpc_server.Point{Latitude: 0, Longitude: 2}, Message: "Fifth message"},
-		{Location: &grpc_server.Point{Latitude: 0, Longitude: 3}, Message: "Sixth message"},
+func runRouteChat(client pb.RouteGuideClient) {
+	notes := []*pb.RouteNote{
+		{Location: &pb.Point{Latitude: 0, Longitude: 1}, Message: "First message"},
+		{Location: &pb.Point{Latitude: 0, Longitude: 2}, Message: "Second message"},
+		{Location: &pb.Point{Latitude: 0, Longitude: 3}, Message: "Third message"},
+		{Location: &pb.Point{Latitude: 0, Longitude: 1}, Message: "Fourth message"},
+		{Location: &pb.Point{Latitude: 0, Longitude: 2}, Message: "Fifth message"},
+		{Location: &pb.Point{Latitude: 0, Longitude: 3}, Message: "Sixth message"},
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
@@ -117,8 +117,8 @@ func runRouteChat(client grpc_server.RouteGuideClient) {
 	<-waitc
 }
 
-func randomPoint(r *rand.Rand) *grpc_server.Point {
+func randomPoint(r *rand.Rand) *pb.Point {
 	lat := (r.Int31n(180) - 90) * 1e7
 	long := (r.Int31n(360) - 180) * 1e7
-	return &grpc_server.Point{Latitude: lat, Longitude: long}
+	return &pb.Point{Latitude: lat, Longitude: long}
 }

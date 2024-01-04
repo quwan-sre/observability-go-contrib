@@ -4,7 +4,7 @@ import (
 	"flag"
 	"fmt"
 	metrics "github.com/quwan-sre/observability-go-contrib/metrics/grpc"
-	"github.com/quwan-sre/observability-go-contrib/test/e2e/metrics/grpc_server"
+	"github.com/quwan-sre/observability-go-contrib/test/e2e/metrics/pb"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"io"
@@ -29,18 +29,18 @@ func TestGRPCClient(t *testing.T) {
 		log.Fatalf("fail to dial: %v", err)
 	}
 	defer conn.Close()
-	client := grpc_server.NewRouteGuideClient(conn)
+	client := pb.NewRouteGuideClient(conn)
 
 	// Looking for a valid feature
-	printFeature(client, &grpc_server.Point{Latitude: 409146138, Longitude: -746188906})
+	printFeature(client, &pb.Point{Latitude: 409146138, Longitude: -746188906})
 
 	// Feature missing.
-	printFeature(client, &grpc_server.Point{Latitude: 0, Longitude: 0})
+	printFeature(client, &pb.Point{Latitude: 0, Longitude: 0})
 
 	// Looking for features between 40, -75 and 42, -73.
-	printFeatures(client, &grpc_server.Rectangle{
-		Lo: &grpc_server.Point{Latitude: 400000000, Longitude: -750000000},
-		Hi: &grpc_server.Point{Latitude: 420000000, Longitude: -730000000},
+	printFeatures(client, &pb.Rectangle{
+		Lo: &pb.Point{Latitude: 400000000, Longitude: -750000000},
+		Hi: &pb.Point{Latitude: 420000000, Longitude: -730000000},
 	})
 
 	// RecordRoute

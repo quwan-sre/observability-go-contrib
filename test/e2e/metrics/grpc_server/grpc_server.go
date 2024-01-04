@@ -1,8 +1,9 @@
-package metrics
+package grpc_server
 
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"flag"
 	"fmt"
 	metrics "github.com/quwan-sre/observability-go-contrib/metrics/grpc"
@@ -16,7 +17,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/proto"
 
-	"github.com/quwan-sre/observability-go-contrib/test/e2e/metrics/grpc_server"
+	"github.com/quwan-sre/observability-go-contrib/test/e2e/metrics/pb"
 )
 
 var (
@@ -24,26 +25,26 @@ var (
 )
 
 type routeGuideServer struct {
-	grpc_server.UnimplementedRouteGuideServer
-	savedFeatures []*grpc_server.Feature // read-only after initialized
+	pb.UnimplementedRouteGuideServer
+	savedFeatures []*pb.Feature // read-only after initialized
 
 	mu         sync.Mutex // protects routeNotes
-	routeNotes map[string][]*grpc_server.RouteNote
+	routeNotes map[string][]*pb.RouteNote
 }
 
 // GetFeature returns the feature at the given point.
-func (s *routeGuideServer) GetFeature(ctx context.Context, point *grpc_server.Point) (*grpc_server.Feature, error) {
+func (s *routeGuideServer) GetFeature(ctx context.Context, point *pb.Point) (*pb.Feature, error) {
 	for _, feature := range s.savedFeatures {
 		if proto.Equal(feature.Location, point) {
 			return feature, nil
 		}
 	}
 	// No feature was found, return an unnamed feature
-	return &grpc_server.Feature{Location: point}, nil
+	return &pb.Feature{Location: point}, errors.New("what the fuck")
 }
 
 // ListFeatures lists all features contained within the given bounding Rectangle.
-func (s *routeGuideServer) ListFeatures(rect *grpc_server.Rectangle, stream grpc_server.RouteGuide_ListFeaturesServer) error {
+func (s *routeGuideServer) ListFeatures(rect *pb.Rectangle, stream pb.RouteGuide_ListFeaturesServer) error {
 	for _, feature := range s.savedFeatures {
 		if inRange(feature.Location, rect) {
 			if err := stream.Send(feature); err != nil {
@@ -59,15 +60,15 @@ func (s *routeGuideServer) ListFeatures(rect *grpc_server.Rectangle, stream grpc
 // It gets a stream of points, and responds with statistics about the "trip":
 // number of points,  number of known features visited, total distance traveled, and
 // total time spent.
-func (s *routeGuideServer) RecordRoute(stream grpc_server.RouteGuide_RecordRouteServer) error {
+func (s *routeGuideServer) RecordRoute(stream pb.RouteGuide_RecordRouteServer) error {
 	var pointCount, featureCount, distance int32
-	var lastPoint *grpc_server.Point
+	var lastPoint *pb.Point
 	startTime := time.Now()
 	for {
 		point, err := stream.Recv()
 		if err == io.EOF {
 			endTime := time.Now()
-			return stream.SendAndClose(&grpc_server.RouteSummary{
+			return stream.SendAndClose(&pb.RouteSummary{
 				PointCount:   pointCount,
 				FeatureCount: featureCount,
 				Distance:     distance,
@@ -92,7 +93,7 @@ func (s *routeGuideServer) RecordRoute(stream grpc_server.RouteGuide_RecordRoute
 
 // RouteChat receives a stream of message/location pairs, and responds with a stream of all
 // previous messages at each of those locations.
-func (s *routeGuideServer) RouteChat(stream grpc_server.RouteGuide_RouteChatServer) error {
+func (s *routeGuideServer) RouteChat(stream pb.RouteGuide_RouteChatServer) error {
 	for {
 		in, err := stream.Recv()
 		if err == io.EOF {
@@ -108,7 +109,7 @@ func (s *routeGuideServer) RouteChat(stream grpc_server.RouteGuide_RouteChatServ
 		// Note: this copy prevents blocking other clients while serving this one.
 		// We don't need to do a deep copy, because elements in the slice are
 		// insert-only and never modified.
-		rn := make([]*grpc_server.RouteNote, len(s.routeNotes[key]))
+		rn := make([]*pb.RouteNote, len(s.routeNotes[key]))
 		copy(rn, s.routeNotes[key])
 		s.mu.Unlock()
 
@@ -135,7 +136,7 @@ func toRadians(num float64) float64 {
 
 // calcDistance calculates the distance between two points using the "haversine" formula.
 // The formula is based on http://mathforum.org/library/drmath/view/51879.html.
-func calcDistance(p1 *grpc_server.Point, p2 *grpc_server.Point) int32 {
+func calcDistance(p1 *pb.Point, p2 *pb.Point) int32 {
 	const CordFactor float64 = 1e7
 	const R = float64(6371000) // earth radius in metres
 	lat1 := toRadians(float64(p1.Latitude) / CordFactor)
@@ -154,7 +155,7 @@ func calcDistance(p1 *grpc_server.Point, p2 *grpc_server.Point) int32 {
 	return int32(distance)
 }
 
-func inRange(point *grpc_server.Point, rect *grpc_server.Rectangle) bool {
+func inRange(point *pb.Point, rect *pb.Rectangle) bool {
 	left := math.Min(float64(rect.Lo.Longitude), float64(rect.Hi.Longitude))
 	right := math.Max(float64(rect.Lo.Longitude), float64(rect.Hi.Longitude))
 	top := math.Max(float64(rect.Lo.Latitude), float64(rect.Hi.Latitude))
@@ -169,17 +170,17 @@ func inRange(point *grpc_server.Point, rect *grpc_server.Rectangle) bool {
 	return false
 }
 
-func serialize(point *grpc_server.Point) string {
+func serialize(point *pb.Point) string {
 	return fmt.Sprintf("%d %d", point.Latitude, point.Longitude)
 }
 
 func newServer() *routeGuideServer {
-	s := &routeGuideServer{routeNotes: make(map[string][]*grpc_server.RouteNote)}
+	s := &routeGuideServer{routeNotes: make(map[string][]*pb.RouteNote)}
 	s.loadFeatures()
 	return s
 }
 
-func runGRPCServer() {
+func RunGRPCServer() {
 	flag.Parse()
 	lis, err := net.Listen("tcp", fmt.Sprintf("localhost:%d", *port))
 	if err != nil {
@@ -190,7 +191,7 @@ func runGRPCServer() {
 		grpc.StreamInterceptor(metrics.NewStreamServerInterceptor()),
 	}
 	grpcServer := grpc.NewServer(opts...)
-	grpc_server.RegisterRouteGuideServer(grpcServer, newServer())
+	pb.RegisterRouteGuideServer(grpcServer, newServer())
 	grpcServer.Serve(lis)
 }
 
