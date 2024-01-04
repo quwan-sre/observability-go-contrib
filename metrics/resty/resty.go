@@ -46,7 +46,7 @@ func NewAfterResponse() func(c *resty.Client, r *resty.Response) error {
 		latency := time.Now().Sub(t)
 		endpoint := ""
 		if req.RawRequest != nil && req.RawRequest.URL != nil {
-			endpoint = req.RawRequest.URL.Path
+			endpoint = req.RawRequest.URL.Host + req.RawRequest.URL.Path
 		}
 
 		common.DefaultRPCSendRequestMetric.With(prometheus.Labels{
