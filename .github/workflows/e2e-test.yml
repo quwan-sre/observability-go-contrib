@@ -18,7 +18,12 @@ jobs:
         go-version: '1.17'
 
     - name: Test with coverage
-      run: go test -v -cover -timeout 5m -coverpkg=./... -parallel 1 -covermode=atomic -gcflags=all=-l $(go list ./test/e2e/...) -coverprofile=coverage.txt
+      run: go test -v -cover -timeout 5m -coverpkg=./... -parallel 1 -covermode=atomic -gcflags=all=-l $(go list ./test/e2e/...) -coverprofile=coverage_full.txt
+
+    - name: Filter unnecessary codes coverage
+      run: |
+        cat coverage_full.txt | grep -v "github.com/quwan-sre/observability-go-contrib/test" > coverage.txt
+        mv coverage_full.txt full.txt.bak
 
     - name: Upload coverage reports to Codecov
       run: |
