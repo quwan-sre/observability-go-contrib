@@ -3,14 +3,16 @@ package metrics
 import (
 	"flag"
 	"fmt"
-	metrics "github.com/quwan-sre/observability-go-contrib/metrics/grpc"
-	"github.com/quwan-sre/observability-go-contrib/test/e2e/metrics/pb"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
 	"io"
 	"log"
 	"net/http"
 	"testing"
+
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
+
+	metrics "github.com/quwan-sre/observability-go-contrib/metrics/grpc"
+	"github.com/quwan-sre/observability-go-contrib/test/e2e/metrics/pb"
 )
 
 func TestGRPCClient(t *testing.T) {

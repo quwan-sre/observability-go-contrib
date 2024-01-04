@@ -3,10 +3,8 @@ package grpc_server
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"flag"
 	"fmt"
-	metrics "github.com/quwan-sre/observability-go-contrib/metrics/grpc"
 	"io"
 	"log"
 	"math"
@@ -15,8 +13,11 @@ import (
 	"time"
 
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/proto"
 
+	metrics "github.com/quwan-sre/observability-go-contrib/metrics/grpc"
 	"github.com/quwan-sre/observability-go-contrib/test/e2e/metrics/pb"
 )
 
@@ -40,7 +41,7 @@ func (s *routeGuideServer) GetFeature(ctx context.Context, point *pb.Point) (*pb
 		}
 	}
 	// No feature was found, return an unnamed feature
-	return &pb.Feature{Location: point}, errors.New("what the fuck")
+	return &pb.Feature{Location: point}, status.Error(codes.InvalidArgument, "wrong argument")
 }
 
 // ListFeatures lists all features contained within the given bounding Rectangle.
