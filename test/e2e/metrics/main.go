@@ -8,6 +8,11 @@ import (
 )
 
 func main() {
+	go runGinServer()
+	go runGRPCServer()
+}
+
+func runGinServer() {
 	r := gin.Default()
 
 	r.Use(metrics.NewMetricsMiddleware())
