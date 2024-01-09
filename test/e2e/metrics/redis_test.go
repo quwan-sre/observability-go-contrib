@@ -24,7 +24,7 @@ func initRedisClient() {
 		redisHost = host
 	}
 	if port != "" {
-		redisHost = port
+		redisPort = port
 	}
 
 	fmt.Println(strings.Join([]string{redisHost, redisPort}, ":"))
