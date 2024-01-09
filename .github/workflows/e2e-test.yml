@@ -9,6 +9,7 @@ on:
 jobs:
   e2e-test:
     runs-on: ubuntu-latest
+    timeout-minutes: 2
 
     services:
       redis:
