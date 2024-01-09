@@ -21,27 +21,86 @@ jobs:
           --health-retries 5
         ports:
           - 6379:6379
+      zookeeper:
+        image: wurstmeister/zookeeper
+        ports:
+          - 2181:2181
+      kafka:
+        image: wurstmeister/kafka
+        ports:
+          - 9092:9092
+        env:
+          KAFKA_ADVERTISED_HOST_NAME: 127.0.0.1
+          KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+          KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+          KAFKA_CREATE_TOPICS: "e2e_test_topic:3:1"
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: Set up Go
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.17'
+
+      - name: Test with coverage
+        run: go test -v -cover -timeout 5m -coverpkg=./... -parallel 4 -covermode=atomic -gcflags=all=-l $(go list ./test/e2e/...) -coverprofile=coverage_full.txt
+        env:
+          REDIS_HOST: localhost
+          REDIS_PORT: 6379
+
+      - name: Filter unnecessary codes coverage
+        run: |
+          cat coverage_full.txt | grep -v "github.com/quwan-sre/observability-go-contrib/test" > coverage.txt
+          rm coverage_full.txt
+
+      - uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+  compatibility-test:
+    needs: e2e-test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        go-version: [ '1.17', '1.18', '1.19' ]
+    timeout-minutes: 2
+
+    services:
+      redis:
+        image: redis
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+      zookeeper:
+        image: wurstmeister/zookeeper
+        ports:
+          - 2181:2181
+      kafka:
+        image: wurstmeister/kafka
+        ports:
+          - 9092:9092
+        env:
+          KAFKA_ADVERTISED_HOST_NAME: 127.0.0.1
+          KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+          KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+          KAFKA_CREATE_TOPICS: "e2e_test_topic:3:1"
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup Go ${{ matrix.go-version }}
       uses: actions/setup-go@v4
       with:
-        go-version: '1.17'
+        go-version: ${{ matrix.go-version }}
+
+    - name: Display Go version
+      run: go version
 
     - name: Test with coverage
       run: go test -v -cover -timeout 5m -coverpkg=./... -parallel 4 -covermode=atomic -gcflags=all=-l $(go list ./test/e2e/...) -coverprofile=coverage_full.txt
       env:
         REDIS_HOST: localhost
         REDIS_PORT: 6379
-
-    - name: Filter unnecessary codes coverage
-      run: |
-        cat coverage_full.txt | grep -v "github.com/quwan-sre/observability-go-contrib/test" > coverage.txt
-        rm coverage_full.txt
-
-    - name: Upload coverage reports to Codecov
-      run: |
-        curl -Os https://uploader.codecov.io/latest/linux/codecov
-        chmod +x codecov
-        ./codecov -t ${CODECOV_TOKEN}
