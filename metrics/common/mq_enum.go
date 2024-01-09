@@ -7,3 +7,7 @@ const (
 const (
 	MQTypeKafka = "kafka"
 )
+
+const (
+	MQPartitionUnknown = "unknown"
+)

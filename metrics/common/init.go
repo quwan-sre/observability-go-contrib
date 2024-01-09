@@ -14,6 +14,10 @@ func init() {
 
 		// cache metrics
 		DefaultCacheRequestMetric,
+
+		// mq metrics
+		DefaultMQSendMsgMetric,
+		DefaultMQReceiveMsgMetric,
 	)
 
 	go func() {
