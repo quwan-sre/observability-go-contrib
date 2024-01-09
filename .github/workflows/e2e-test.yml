@@ -28,7 +28,7 @@ jobs:
         go-version: '1.17'
 
     - name: Test with coverage
-      run: go test -v -cover -timeout 5m -coverpkg=./... -parallel 1 -covermode=atomic -gcflags=all=-l $(go list ./test/e2e/...) -coverprofile=coverage_full.txt
+      run: go test -v -cover -timeout 5m -coverpkg=./... -parallel 4 -covermode=atomic -gcflags=all=-l $(go list ./test/e2e/...) -coverprofile=coverage_full.txt
       env:
         REDIS_HOST: redis
         REDIS_PORT: 6379
