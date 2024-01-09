@@ -27,7 +27,6 @@ func initRedisClient() {
 		redisPort = port
 	}
 
-	fmt.Println(strings.Join([]string{redisHost, redisPort}, ":"))
 	redisClient = redis.NewUniversalClient(&redis.UniversalOptions{
 		Addrs: []string{strings.Join([]string{redisHost, redisPort}, ":")},
 	})
@@ -40,8 +39,8 @@ func TestRedisGo(t *testing.T) {
 
 	health := false
 	for i := 0; i < 3; i++ {
-		if redisClient.Ping(context.TODO()).Err() != nil {
-			fmt.Println("redis health check")
+		if err := redisClient.Ping(context.TODO()).Err(); err != nil {
+			fmt.Printf("redis health check: %v\n", err)
 			time.Sleep(time.Second)
 		} else {
 			health = true
