@@ -53,11 +53,9 @@ jobs:
           cat coverage_full.txt | grep -v "github.com/quwan-sre/observability-go-contrib/test" > coverage.txt
           rm coverage_full.txt
 
-      - name: Upload coverage reports to Codecov
-        run: |
-          curl -Os https://uploader.codecov.io/latest/linux/codecov
-          chmod +x codecov
-          ./codecov -t ${CODECOV_TOKEN}
+      - uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
 
   compatibility-test:
     needs: e2e-test
