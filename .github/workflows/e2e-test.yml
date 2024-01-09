@@ -9,6 +9,18 @@ on:
 jobs:
   e2e-test:
     runs-on: ubuntu-latest
+    timeout-minutes: 2
+
+    services:
+      redis:
+        image: redis
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
     steps:
     - uses: actions/checkout@v3
 
@@ -18,7 +30,10 @@ jobs:
         go-version: '1.17'
 
     - name: Test with coverage
-      run: go test -v -cover -timeout 5m -coverpkg=./... -parallel 1 -covermode=atomic -gcflags=all=-l $(go list ./test/e2e/...) -coverprofile=coverage_full.txt
+      run: go test -v -cover -timeout 5m -coverpkg=./... -parallel 4 -covermode=atomic -gcflags=all=-l $(go list ./test/e2e/...) -coverprofile=coverage_full.txt
+      env:
+        REDIS_HOST: localhost
+        REDIS_PORT: 6379
 
     - name: Filter unnecessary codes coverage
       run: |

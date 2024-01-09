@@ -1,6 +1,9 @@
 package metrics
 
 import (
+	"fmt"
+	"io"
+	"log"
 	"net"
 	"net/http"
 	"testing"
@@ -34,4 +37,14 @@ func TestMain(t *testing.M) {
 
 	// ready, run the test case
 	t.Run()
+
+	resp, err := http.Get("http://127.0.0.1:8080/metrics")
+	if err != nil || resp.StatusCode != 200 {
+		log.Fatalf("test failed, err: %v", err)
+	}
+	bodyBytes, err := io.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatalf("test failed read body, err: %v", err)
+	}
+	fmt.Println(string(bodyBytes))
 }

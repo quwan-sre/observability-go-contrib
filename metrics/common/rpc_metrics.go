@@ -1,7 +1,6 @@
 package common
 
 import (
-	"math/rand"
 	"time"
 
 	"github.com/prometheus/client_golang/prometheus"
@@ -33,20 +32,3 @@ var (
 		NativeHistogramMaxBucketNumber:  20,
 	}, []string{"sdk", "request_protocol", "endpoint", "rpc_status_code", "http_status_code"})
 )
-
-func init() {
-	prometheus.MustRegister(
-		// common request
-		DefaultRPCReceiveRequestMetric,
-		DefaultRPCSendRequestMetric,
-	)
-
-	go func() {
-		for {
-			// reset all metrics every 25-35 minutes
-			time.Sleep(time.Duration(25+rand.Intn(10)) * time.Minute)
-			DefaultRPCReceiveRequestMetric.Reset()
-			DefaultRPCSendRequestMetric.Reset()
-		}
-	}()
-}

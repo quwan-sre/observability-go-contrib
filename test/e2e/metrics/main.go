@@ -1,6 +1,7 @@
 package metrics
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 
@@ -9,11 +10,13 @@ import (
 )
 
 func main() {
+	fmt.Println("Test begin...")
 	go runGinServer()
 	go grpc_server.RunGRPCServer()
 }
 
 func runGinServer() {
+	fmt.Println("Setting up gin server...")
 	r := gin.Default()
 
 	r.Use(metrics.NewMetricsMiddleware())

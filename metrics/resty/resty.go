@@ -12,7 +12,11 @@ import (
 	"github.com/quwan-sre/observability-go-contrib/metrics/common"
 )
 
-type metricsCtxKey struct{}
+type metricsCtxType struct{}
+
+var (
+	metricsCtxKey = metricsCtxType{}
+)
 
 func NewMetricsMiddleware(c *resty.Client) {
 	if c == nil {
@@ -27,7 +31,7 @@ func NewMetricsMiddleware(c *resty.Client) {
 
 func NewBeforeRequest() func(c *resty.Client, r *resty.Request) error {
 	return func(c *resty.Client, r *resty.Request) error {
-		ctx := context.WithValue(r.Context(), metricsCtxKey{}, time.Now())
+		ctx := context.WithValue(r.Context(), metricsCtxKey, time.Now())
 		r.SetContext(ctx)
 		return nil
 	}
@@ -36,7 +40,7 @@ func NewBeforeRequest() func(c *resty.Client, r *resty.Request) error {
 func NewAfterResponse() func(c *resty.Client, r *resty.Response) error {
 	return func(c *resty.Client, r *resty.Response) error {
 		req := r.Request
-		timeInterface := req.Context().Value(metricsCtxKey{})
+		timeInterface := req.Context().Value(metricsCtxKey)
 		t, ok := timeInterface.(time.Time)
 		if !ok {
 			// should never reach here
