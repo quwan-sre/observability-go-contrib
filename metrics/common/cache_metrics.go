@@ -18,5 +18,5 @@ var (
 		NativeHistogramMinResetDuration: 5 * time.Minute,
 		NativeHistogramMaxZeroThreshold: 0.01,
 		NativeHistogramMaxBucketNumber:  20,
-	}, []string{"sdk", "cache_type", "cache_host", "command", "response_status"})
+	}, []string{"sdk", "cache_type", "cache_addr", "command", "response_status"})
 )

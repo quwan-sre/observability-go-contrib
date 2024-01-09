@@ -35,7 +35,7 @@ func NewRedisHook(dst []string) rdsV9.Hook {
 
 	return metricsHook{
 		labels: prometheus.Labels{
-			"cache_host": host,
+			"cache_addr": host,
 		},
 	}
 }
