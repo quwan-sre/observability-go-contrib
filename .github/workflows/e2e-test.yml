@@ -30,7 +30,7 @@ jobs:
         ports:
           - 9092:9092
         env:
-          KAFKA_ADVERTISED_HOST_NAME: kafka
+          KAFKA_ADVERTISED_HOST_NAME: 127.0.0.1
           KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
           KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
           KAFKA_CREATE_TOPICS: "e2e_test_topic:3:1"
