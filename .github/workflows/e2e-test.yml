@@ -60,6 +60,7 @@ jobs:
           ./codecov -t ${CODECOV_TOKEN}
 
   compatibility-test:
+    needs: e2e-test
     runs-on: ubuntu-latest
     strategy:
       matrix:
