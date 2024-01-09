@@ -30,12 +30,12 @@
 
 ## Go Packages 支持列表
 
-| 分类    | Package                      | 数据类型  & 稳定性状态                                                                                |
-|---------|------------------------------|--------------------------------------------------------------------------------------------------|
-| HTTP    | github.com/gin-gonic/gin     | dev:  [metrics](https://gitlab.ttyuyin.com/observability/go-contrib/-/blob/master/metrics/gin)   |
-| HTTP    | github.com/go-resty/resty/v2 | dev:  [metrics](https://gitlab.ttyuyin.com/observability/go-contrib/-/blob/master/metrics/resty) |
-| RPC     | google.golang.org/grpc       | dev:  [metrics](https://gitlab.ttyuyin.com/observability/go-contrib/-/blob/master/metrics/grpc)  |
-| Redis   | github.com/go-redis/redis/v9 | todo: metrics                                                                                    |
-| Kafka   | github.com/Shopify/sarama    | todo: metrics                                                                                    |
-| MongoDB | go.mongodb.org/mongo-driver  | todo: metrics                                                                                    |
-| etcd    | go.etcd.io/etcd/client/v3    | todo: metrics                                                                                    |
+| 分类    | Package                      | 数据类型  & 稳定性状态                                                                                     |
+|---------|------------------------------|---------------------------------------------------------------------------------------------------|
+| HTTP    | github.com/gin-gonic/gin     | dev:  [metrics](https://github.com/quwan-sre/observability-go-contrib/tree/master/metrics/gin)    |
+| HTTP    | github.com/go-resty/resty/v2 | dev:  [metrics](https://github.com/quwan-sre/observability-go-contrib/tree/master/metrics/resty)  |
+| RPC     | google.golang.org/grpc       | dev:  [metrics](https://github.com/quwan-sre/observability-go-contrib/tree/master/metrics/grpc)   |
+| Redis   | github.com/go-redis/redis/v9 | dev:  [metrics](https://github.com/quwan-sre/observability-go-contrib/tree/master/metrics/go-redis) |
+| Kafka   | github.com/Shopify/sarama    | todo: metrics                                                                                     |
+| MongoDB | go.mongodb.org/mongo-driver  | todo: metrics                                                                                     |
+| etcd    | go.etcd.io/etcd/client/v3    | todo: metrics                                                                                     |
