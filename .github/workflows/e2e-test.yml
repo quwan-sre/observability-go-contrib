@@ -108,7 +108,7 @@ jobs:
           MONGO_INITDB_ROOT_PASSWORD: password
           MONGO_INITDB_DATABASE: test
         options: >-
-          --health-cmd mongo
+          --health-cmd "echo 'db.runCommand(\"ping\").ok' | mongosh localhost:27017/test --quiet"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
