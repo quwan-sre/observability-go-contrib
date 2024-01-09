@@ -18,6 +18,9 @@ func init() {
 		// mq metrics
 		DefaultMQSendMsgMetric,
 		DefaultMQReceiveMsgMetric,
+
+		// database metrics
+		DefaultDatabaseSendRequestMetric,
 	)
 
 	go func() {
@@ -35,6 +38,9 @@ func init() {
 			// mq metrics
 			DefaultMQReceiveMsgMetric.Reset()
 			DefaultMQSendMsgMetric.Reset()
+
+			// database metrics
+			DefaultDatabaseSendRequestMetric.Reset()
 		}
 	}()
 }
