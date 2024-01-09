@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	mongo_driver "github.com/quwan-sre/observability-go-contrib/metrics/mongo-driver"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"testing"
@@ -42,5 +43,12 @@ func TestMongoDriver(t *testing.T) {
 
 	mongoClient.Database("fake").CreateCollection(context.TODO(), "exist")
 	err = mongoClient.Database("fake").CreateCollection(context.TODO(), "exist")
+	fmt.Println(err)
+
+	result, err := mongoClient.Database("fake").Collection("yourCollection").UpdateMany(context.Background(), bson.D{{}}, bson.D{{"$set t", bson.D{{"field", "value"}}}})
+	fmt.Println(result)
+	fmt.Println(err)
+	cursor, err := mongoClient.Database("fake").Collection("testset").Find(context.TODO(), bson.D{{"$set t", bson.D{{"field", "value"}}}})
+	fmt.Println(cursor)
 	fmt.Println(err)
 }
