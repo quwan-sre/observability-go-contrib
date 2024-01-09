@@ -182,6 +182,7 @@ func newServer() *routeGuideServer {
 }
 
 func RunGRPCServer() {
+	fmt.Println("Setting up grpc server...")
 	flag.Parse()
 	lis, err := net.Listen("tcp", fmt.Sprintf("localhost:%d", *port))
 	if err != nil {

@@ -18,6 +18,7 @@ var (
 )
 
 func initRedisClient() {
+	fmt.Println("Initializing redis client...")
 	host, port := os.Getenv("REDIS_HOST"), os.Getenv("REDIS_PORT")
 	if host != "" {
 		redisHost = host
