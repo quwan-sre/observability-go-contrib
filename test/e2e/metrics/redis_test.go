@@ -8,11 +8,12 @@ import (
 	"os"
 	"strings"
 	"testing"
+	"time"
 )
 
 var (
 	redisClient redis.UniversalClient
-	redisHost   = "127.0.0.1"
+	redisHost   = "127.0.1.1"
 	redisPort   = "6379"
 )
 
@@ -26,6 +27,7 @@ func initRedisClient() {
 		redisHost = port
 	}
 
+	fmt.Println(strings.Join([]string{redisHost, redisPort}, ":"))
 	redisClient = redis.NewUniversalClient(&redis.UniversalOptions{
 		Addrs: []string{strings.Join([]string{redisHost, redisPort}, ":")},
 	})
@@ -36,20 +38,20 @@ func initRedisClient() {
 func TestRedisGo(t *testing.T) {
 	initRedisClient()
 
-	//health := false
-	//for i := 0; i < 20; i++ {
-	//	if redisClient.Ping(context.TODO()).Err() != nil {
-	//		fmt.Println("redis health check")
-	//		time.Sleep(time.Second)
-	//	} else {
-	//		health = true
-	//		break
-	//	}
-	//}
-	//
-	//if !health {
-	//	t.Fatalf("redis not ready")
-	//}
+	health := false
+	for i := 0; i < 3; i++ {
+		if redisClient.Ping(context.TODO()).Err() != nil {
+			fmt.Println("redis health check")
+			time.Sleep(time.Second)
+		} else {
+			health = true
+			break
+		}
+	}
+
+	if !health {
+		t.Fatalf("redis not ready")
+	}
 
 	if redisClient.Set(context.TODO(), "foo", "bar", 0).Err() != nil {
 		t.Error("redis err")
