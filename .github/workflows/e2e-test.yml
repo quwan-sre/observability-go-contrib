@@ -77,6 +77,19 @@ jobs:
           --health-retries 5
         ports:
           - 6379:6379
+      zookeeper:
+        image: wurstmeister/zookeeper
+        ports:
+          - 2181:2181
+      kafka:
+        image: wurstmeister/kafka
+        ports:
+          - 9092:9092
+        env:
+          KAFKA_ADVERTISED_HOST_NAME: 127.0.0.1
+          KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+          KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+          KAFKA_CREATE_TOPICS: "e2e_test_topic:3:1"
     steps:
     - uses: actions/checkout@v4
 
