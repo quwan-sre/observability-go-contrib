@@ -19,10 +19,9 @@ func initKafkaClient() {
 	cfg.Producer.Return.Successes = true
 	cfg.Consumer.Return.Errors = true
 	cfg.Consumer.Offsets.Initial = sarama.OffsetNewest
-	cfg.Producer.Interceptors = append(cfg.Producer.Interceptors, metrics.NewInterceptor([]string{"localhost:9092", "localhost:9092"}))
-	cfg.Consumer.Interceptors = append(cfg.Consumer.Interceptors, metrics.NewInterceptor([]string{"localhost:9092", "localhost:9092"}))
-	time.Sleep(30 * time.Second)
-	kafkaClient, err = sarama.NewClient([]string{"localhost:9092"}, cfg)
+	cfg.Producer.Interceptors = append(cfg.Producer.Interceptors, metrics.NewInterceptor([]string{"127.0.0.1:9092", "localhost:9092"}))
+	cfg.Consumer.Interceptors = append(cfg.Consumer.Interceptors, metrics.NewInterceptor([]string{"127.0.0.1:9092", "localhost:9092"}))
+	kafkaClient, err = sarama.NewClient([]string{"kafka:9092"}, cfg)
 	if err != nil {
 		panic(fmt.Sprintf("create kafka client failed: %v", err))
 	}
