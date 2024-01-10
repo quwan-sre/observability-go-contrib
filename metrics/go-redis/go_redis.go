@@ -2,12 +2,14 @@ package go_redis
 
 import (
 	"context"
-	rdsV9 "github.com/go-redis/redis/v9"
-	"github.com/prometheus/client_golang/prometheus"
-	"github.com/quwan-sre/observability-go-contrib/metrics/common"
 	"sort"
 	"strings"
 	"time"
+
+	rdsV9 "github.com/go-redis/redis/v9"
+	"github.com/prometheus/client_golang/prometheus"
+
+	"github.com/quwan-sre/observability-go-contrib/metrics/common"
 )
 
 type metricsHook struct {

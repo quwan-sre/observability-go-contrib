@@ -3,12 +3,14 @@ package metrics
 import (
 	"context"
 	"fmt"
-	"github.com/go-redis/redis/v9"
-	go_redis "github.com/quwan-sre/observability-go-contrib/metrics/go-redis"
 	"os"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/go-redis/redis/v9"
+
+	go_redis "github.com/quwan-sre/observability-go-contrib/metrics/go-redis"
 )
 
 var (

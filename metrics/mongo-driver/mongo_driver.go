@@ -2,11 +2,13 @@ package mongo_driver
 
 import (
 	"context"
-	"github.com/prometheus/client_golang/prometheus"
-	"github.com/quwan-sre/observability-go-contrib/metrics/common"
-	"go.mongodb.org/mongo-driver/event"
 	"strings"
 	"time"
+
+	"github.com/prometheus/client_golang/prometheus"
+	"go.mongodb.org/mongo-driver/event"
+
+	"github.com/quwan-sre/observability-go-contrib/metrics/common"
 )
 
 func NewCommandMonitor() *event.CommandMonitor {

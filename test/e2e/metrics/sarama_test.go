@@ -2,10 +2,12 @@ package metrics
 
 import (
 	"fmt"
-	"github.com/Shopify/sarama"
-	metrics "github.com/quwan-sre/observability-go-contrib/metrics/sarama"
 	"testing"
 	"time"
+
+	"github.com/Shopify/sarama"
+
+	metrics "github.com/quwan-sre/observability-go-contrib/metrics/sarama"
 )
 
 var (
