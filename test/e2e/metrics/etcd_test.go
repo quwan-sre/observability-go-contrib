@@ -3,11 +3,13 @@ package metrics
 import (
 	"context"
 	"fmt"
-	metrics "github.com/quwan-sre/observability-go-contrib/metrics/grpc"
-	clientv3 "go.etcd.io/etcd/client/v3"
-	"google.golang.org/grpc"
 	"testing"
 	"time"
+
+	clientv3 "go.etcd.io/etcd/client/v3"
+	"google.golang.org/grpc"
+
+	metrics "github.com/quwan-sre/observability-go-contrib/metrics/grpc"
 )
 
 var (
