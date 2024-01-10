@@ -23,3 +23,9 @@ services:
       MONGO_INITDB_DATABASE: test
     ports:
       - 27017:27017
+  etcd:
+    image: docker.io/bitnami/etcd:3.5
+    ports:
+      - "2379:2379"
+    environment:
+      ALLOW_NONE_AUTHENTICATION: yes
