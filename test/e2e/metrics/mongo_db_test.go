@@ -3,12 +3,14 @@ package metrics
 import (
 	"context"
 	"fmt"
-	mongo_driver "github.com/quwan-sre/observability-go-contrib/metrics/mongo-driver"
+	"testing"
+	"time"
+
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"testing"
-	"time"
+
+	mongo_driver "github.com/quwan-sre/observability-go-contrib/metrics/mongo-driver"
 )
 
 var mongoClient *mongo.Client

@@ -47,6 +47,12 @@ jobs:
           --health-retries 5
         ports:
           - 27017:27017
+      etcd:
+        image: docker.io/bitnami/etcd:3.5
+        ports:
+          - 2379:2379
+        env:
+          ALLOW_NONE_AUTHENTICATION: yes
     steps:
       - uses: actions/checkout@v3
 
@@ -114,6 +120,12 @@ jobs:
           --health-retries 5
         ports:
           - 27017:27017
+      etcd:
+        image: docker.io/bitnami/etcd:3.5
+        ports:
+          - 2379:2379
+        env:
+          ALLOW_NONE_AUTHENTICATION: yes
     steps:
     - uses: actions/checkout@v4
 

@@ -2,12 +2,14 @@ package sarama
 
 import (
 	"fmt"
-	"github.com/Shopify/sarama"
-	"github.com/prometheus/client_golang/prometheus"
-	"github.com/quwan-sre/observability-go-contrib/metrics/common"
 	"sort"
 	"strconv"
 	"strings"
+
+	"github.com/Shopify/sarama"
+	"github.com/prometheus/client_golang/prometheus"
+
+	"github.com/quwan-sre/observability-go-contrib/metrics/common"
 )
 
 type MetricsInterceptor struct {

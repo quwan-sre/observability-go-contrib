@@ -1,9 +1,10 @@
 package common
 
 import (
-	"github.com/prometheus/client_golang/prometheus"
 	"math/rand"
 	"time"
+
+	"github.com/prometheus/client_golang/prometheus"
 )
 
 func init() {
