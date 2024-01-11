@@ -26,8 +26,8 @@ func init() {
 
 	go func() {
 		for {
-			// reset all metrics every 23-24 hours
-			time.Sleep(time.Duration((60*23)+rand.Intn(60)) * time.Minute)
+			// reset all metrics every 6-7 hours
+			time.Sleep(time.Duration((60*6)+rand.Intn(60)) * time.Minute)
 
 			// rpc metrics
 			DefaultRPCReceiveRequestMetric.Reset()
