@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	DefaultCacheRequestMetricName = "apm_cache_request_duration_seconds"
+	DefaultCacheRequestMetricName = "apm_cache_send_request_duration_seconds"
 )
 
 var (
