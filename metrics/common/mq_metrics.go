@@ -12,7 +12,7 @@ const (
 var (
 	DefaultMQReceiveMsgMetric = prometheus.NewCounterVec(prometheus.CounterOpts{
 		Name: DefaultMQReceiveMsgMetricName,
-	}, []string{"sdk", "mq_type", "mq_host", "mq_topic", "mq_partition"})
+	}, []string{"sdk", "mq_type", "mq_addr", "mq_topic", "mq_partition"})
 	DefaultMQSendMsgMetric = prometheus.NewCounterVec(prometheus.CounterOpts{
 		Name: DefaultMQSendMsgMetricName,
 	}, []string{"sdk", "mq_type", "mq_addr", "mq_topic", "mq_partition"})
