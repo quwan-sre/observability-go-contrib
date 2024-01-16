@@ -76,7 +76,7 @@ func (h metricsHook) AfterProcess(ctx context.Context, cmd rdsV9.Cmder) error {
 		labels[k] = v
 	}
 
-	common.DefaultCacheRequestMetric.With(labels).Observe(latency.Seconds())
+	common.DefaultCacheRequestMetric.With(labels).Observe(latency.Seconds() * 1000)
 	return nil
 }
 
@@ -117,6 +117,6 @@ func (h metricsHook) AfterProcessPipeline(ctx context.Context, cmds []rdsV9.Cmde
 		labels[k] = v
 	}
 
-	common.DefaultCacheRequestMetric.With(labels).Observe(latency.Seconds())
+	common.DefaultCacheRequestMetric.With(labels).Observe(latency.Seconds() * 1000)
 	return nil
 }

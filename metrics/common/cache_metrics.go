@@ -7,17 +7,17 @@ import (
 )
 
 const (
-	DefaultCacheRequestMetricName = "apm_cache_send_request_duration_seconds"
+	DefaultCacheRequestMetricName = "apm_cache_send_request_duration_milliseconds"
 )
 
 var (
 	DefaultCacheRequestMetric = prometheus.NewHistogramVec(prometheus.HistogramOpts{
 		Name:                            DefaultCacheRequestMetricName,
-		Buckets:                         []float64{0.00025, 0.0005, 0.001, 0.002, 0.005, 0.01, 0.25, 0.5, 1, 2.5, 5, 10},
+		Buckets:                         []float64{0.25, 0.5, 1, 2, 5, 10, 25, 50, 100, 250, 500, 1000, 3000, 5000},
 		NativeHistogramBucketFactor:     1.4,
-		NativeHistogramZeroThreshold:    0.0001,
+		NativeHistogramZeroThreshold:    0.1,
 		NativeHistogramMinResetDuration: 5 * time.Minute,
-		NativeHistogramMaxZeroThreshold: 0.01,
+		NativeHistogramMaxZeroThreshold: 10,
 		NativeHistogramMaxBucketNumber:  20,
 	}, []string{"sdk", "cache_type", "cache_addr", "command", "response_status"})
 )

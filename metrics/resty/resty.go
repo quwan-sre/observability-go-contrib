@@ -48,18 +48,21 @@ func NewAfterResponse() func(c *resty.Client, r *resty.Response) error {
 		}
 
 		latency := time.Now().Sub(t)
-		endpoint := ""
+		endpoint := common.RPCUnknownString
+		host := common.RPCUnknownString
 		if req.RawRequest != nil && req.RawRequest.URL != nil {
 			endpoint = req.RawRequest.URL.Host + req.RawRequest.URL.Path
+			host = req.RawRequest.URL.Host
 		}
 
 		common.DefaultRPCSendRequestMetric.With(prometheus.Labels{
-			"sdk":              common.RPCSDKResty,
-			"request_protocol": common.RPCProtocolHTTP,
-			"endpoint":         endpoint,
-			"rpc_status_code":  strconv.Itoa(int(grpc.OK)),
-			"http_status_code": strconv.Itoa(r.StatusCode()),
-		}).Observe(latency.Seconds())
+			"sdk":                  common.RPCSDKResty,
+			"request_protocol":     common.RPCProtocolHTTP,
+			"request_target":       host,
+			"request_path":         endpoint,
+			"grpc_response_status": strconv.Itoa(int(grpc.OK)),
+			"response_code":        strconv.Itoa(r.StatusCode()),
+		}).Observe(latency.Seconds() * 1000)
 		return nil
 	}
 }

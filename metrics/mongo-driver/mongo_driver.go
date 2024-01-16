@@ -30,7 +30,7 @@ func Succeeded(ctx context.Context, evt *event.CommandSucceededEvent) {
 		"database_addr":   parseConnectionID(evt.ConnectionID),
 		"response_status": common.DatabaseResponseStatusSuccess,
 		"query_type":      evt.CommandName,
-	}).Observe(float64(evt.DurationNanos) / float64(time.Second))
+	}).Observe(float64(evt.DurationNanos) / float64(time.Millisecond))
 }
 
 func Failed(ctx context.Context, evt *event.CommandFailedEvent) {
@@ -40,7 +40,7 @@ func Failed(ctx context.Context, evt *event.CommandFailedEvent) {
 		"database_addr":   parseConnectionID(evt.ConnectionID),
 		"response_status": common.DatabaseResponseStatusError,
 		"query_type":      evt.CommandName,
-	}).Observe(float64(evt.DurationNanos) / float64(time.Second))
+	}).Observe(float64(evt.DurationNanos) / float64(time.Millisecond))
 }
 
 func parseConnectionID(connectionID string) string {

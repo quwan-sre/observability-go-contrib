@@ -7,17 +7,17 @@ import (
 )
 
 const (
-	DefaultDatabaseSendRequestMetricName = "apm_database_send_request_duration_seconds"
+	DefaultDatabaseSendRequestMetricName = "apm_database_send_request_duration_milliseconds"
 )
 
 var (
 	DefaultDatabaseSendRequestMetric = prometheus.NewHistogramVec(prometheus.HistogramOpts{
 		Name:                            DefaultDatabaseSendRequestMetricName,
-		Buckets:                         []float64{0.001, 0.0025, 0.005, 0.01, 0.02, 0.05, 0.1, 0.5, 1, 2.5, 5, 7.5, 10},
+		Buckets:                         []float64{1, 2.5, 5, 10, 20, 50, 100, 500, 1000, 2500, 5000, 7500, 10000},
 		NativeHistogramBucketFactor:     1.4,
-		NativeHistogramZeroThreshold:    0.001,
+		NativeHistogramZeroThreshold:    1,
 		NativeHistogramMinResetDuration: 5 * time.Minute,
-		NativeHistogramMaxZeroThreshold: 0.05,
+		NativeHistogramMaxZeroThreshold: 50,
 		NativeHistogramMaxBucketNumber:  20,
 	}, []string{"sdk", "database_type", "database_addr", "response_status", "query_type"})
 )

@@ -28,13 +28,15 @@ func NewUnaryServerInterceptor() grpc.UnaryServerInterceptor {
 				code = s.Code()
 			}
 
+			requestPath, requestTarget := ParseFullMethod(info.FullMethod)
 			common.DefaultRPCReceiveRequestMetric.With(prometheus.Labels{
-				"sdk":              common.RPCSDKGRPC,
-				"request_protocol": common.RPCProtocolGRPC,
-				"endpoint":         ParseFullMethod(info.FullMethod),
-				"rpc_status_code":  strconv.Itoa(int(code)),
-				"http_status_code": "0",
-			}).Observe(latency.Seconds())
+				"sdk":                  common.RPCSDKGRPC,
+				"request_protocol":     common.RPCProtocolGRPC,
+				"request_target":       requestTarget,
+				"request_path":         requestPath,
+				"grpc_response_status": strconv.Itoa(int(code)),
+				"response_code":        "0",
+			}).Observe(latency.Seconds() * 1000)
 		}()
 
 		resp, err = handler(ctx, req)
@@ -45,7 +47,8 @@ func NewUnaryServerInterceptor() grpc.UnaryServerInterceptor {
 
 func NewStreamServerInterceptor() grpc.StreamServerInterceptor {
 	return func(srv interface{}, ss grpc.ServerStream, info *grpc.StreamServerInfo, handler grpc.StreamHandler) (err error) {
-		err = handler(srv, &wrapServerStream{ss, ParseFullMethod(info.FullMethod)})
+		requestPath, requestTarget := ParseFullMethod(info.FullMethod)
+		err = handler(srv, &wrapServerStream{ss, requestPath, requestTarget})
 		return err
 	}
 }
@@ -63,13 +66,15 @@ func NewUnaryClientInterceptor() grpc.UnaryClientInterceptor {
 				code = s.Code()
 			}
 
+			requestPath, requestTarget := ParseFullMethod(method)
 			common.DefaultRPCSendRequestMetric.With(prometheus.Labels{
-				"sdk":              common.RPCSDKGRPC,
-				"request_protocol": common.RPCProtocolGRPC,
-				"endpoint":         ParseFullMethod(method),
-				"rpc_status_code":  strconv.Itoa(int(code)),
-				"http_status_code": "0",
-			}).Observe(latency.Seconds())
+				"sdk":                  common.RPCSDKGRPC,
+				"request_protocol":     common.RPCProtocolGRPC,
+				"request_target":       requestTarget,
+				"request_path":         requestPath,
+				"grpc_response_status": strconv.Itoa(int(code)),
+				"response_code":        "0",
+			}).Observe(latency.Seconds() * 1000)
 		}()
 
 		err = invoker(ctx, method, req, reply, cc, opts...)
@@ -80,9 +85,11 @@ func NewUnaryClientInterceptor() grpc.UnaryClientInterceptor {
 func NewStreamClientInterceptor() grpc.StreamClientInterceptor {
 	return func(ctx context.Context, desc *grpc.StreamDesc, cc *grpc.ClientConn, method string, streamer grpc.Streamer, opts ...grpc.CallOption) (grpc.ClientStream, error) {
 		s, err := streamer(ctx, desc, cc, method, opts...)
+		requestPath, requestTarget := ParseFullMethod(method)
 		return &wrapClientStream{
-			ClientStream: s,
-			method:       ParseFullMethod(method),
+			ClientStream:  s,
+			requestTarget: requestTarget,
+			requestPath:   requestPath,
 		}, err
 	}
 }
@@ -90,7 +97,8 @@ func NewStreamClientInterceptor() grpc.StreamClientInterceptor {
 // wrapClientStream wraps grpc.ClientStream to record each Sent/Recv of message in histogram.
 type wrapClientStream struct {
 	grpc.ClientStream
-	method string
+	requestPath   string
+	requestTarget string
 }
 
 func (w *wrapClientStream) SendMsg(m interface{}) error {
@@ -107,12 +115,13 @@ func (w *wrapClientStream) SendMsg(m interface{}) error {
 		}
 
 		common.DefaultRPCSendRequestMetric.With(prometheus.Labels{
-			"sdk":              common.RPCSDKGRPC,
-			"request_protocol": common.RPCProtocolGRPC,
-			"endpoint":         w.method,
-			"rpc_status_code":  strconv.Itoa(int(code)),
-			"http_status_code": "0",
-		}).Observe(latency.Seconds())
+			"sdk":                  common.RPCSDKGRPC,
+			"request_protocol":     common.RPCProtocolGRPC,
+			"request_target":       w.requestTarget,
+			"request_path":         w.requestPath,
+			"grpc_response_status": strconv.Itoa(int(code)),
+			"response_code":        "0",
+		}).Observe(latency.Seconds() * 1000)
 	}()
 
 	err = w.ClientStream.SendMsg(m)
@@ -133,12 +142,13 @@ func (w *wrapClientStream) RecvMsg(m interface{}) error {
 		}
 
 		common.DefaultRPCReceiveRequestMetric.With(prometheus.Labels{
-			"sdk":              common.RPCSDKGRPC,
-			"request_protocol": common.RPCProtocolGRPC,
-			"endpoint":         w.method,
-			"rpc_status_code":  strconv.Itoa(int(code)),
-			"http_status_code": "0",
-		}).Observe(latency.Seconds())
+			"sdk":                  common.RPCSDKGRPC,
+			"request_protocol":     common.RPCProtocolGRPC,
+			"request_target":       w.requestTarget,
+			"request_path":         w.requestPath,
+			"grpc_response_status": strconv.Itoa(int(code)),
+			"response_code":        "0",
+		}).Observe(latency.Seconds() * 1000)
 	}()
 
 	err = w.ClientStream.RecvMsg(m)
@@ -148,7 +158,8 @@ func (w *wrapClientStream) RecvMsg(m interface{}) error {
 // wrapServerStream wraps grpc.ServerStream to record each Sent/Recv of message in histogram.
 type wrapServerStream struct {
 	grpc.ServerStream
-	method string
+	requestPath   string
+	requestTarget string
 }
 
 func (w *wrapServerStream) SendMsg(m interface{}) error {
@@ -165,12 +176,13 @@ func (w *wrapServerStream) SendMsg(m interface{}) error {
 		}
 
 		common.DefaultRPCSendRequestMetric.With(prometheus.Labels{
-			"sdk":              common.RPCSDKGRPC,
-			"request_protocol": common.RPCProtocolGRPC,
-			"endpoint":         w.method,
-			"rpc_status_code":  strconv.Itoa(int(code)),
-			"http_status_code": "0",
-		}).Observe(latency.Seconds())
+			"sdk":                  common.RPCSDKGRPC,
+			"request_protocol":     common.RPCProtocolGRPC,
+			"request_target":       w.requestTarget,
+			"request_path":         w.requestPath,
+			"grpc_response_status": strconv.Itoa(int(code)),
+			"response_code":        "0",
+		}).Observe(latency.Seconds() * 1000)
 	}()
 
 	err = w.ServerStream.SendMsg(m)
@@ -191,30 +203,34 @@ func (w *wrapServerStream) RecvMsg(m interface{}) error {
 		}
 
 		common.DefaultRPCReceiveRequestMetric.With(prometheus.Labels{
-			"sdk":              common.RPCSDKGRPC,
-			"request_protocol": common.RPCProtocolGRPC,
-			"endpoint":         w.method,
-			"rpc_status_code":  strconv.Itoa(int(code)),
-			"http_status_code": "0",
-		}).Observe(latency.Seconds())
+			"sdk":                  common.RPCSDKGRPC,
+			"request_protocol":     common.RPCProtocolGRPC,
+			"request_target":       w.requestTarget,
+			"request_path":         w.requestPath,
+			"grpc_response_status": strconv.Itoa(int(code)),
+			"response_code":        "0",
+		}).Observe(latency.Seconds() * 1000)
 	}()
 
 	err = w.ServerStream.RecvMsg(m)
 	return err
 }
 
-// ParseFullMethod returns a "service/method" as endpoint following the OpenTelemetry semantic
+// ParseFullMethod returns a "/package.service/method" and "service" following the OpenTelemetry semantic
 // conventions.
 //
 // Parsing is consistent with grpc-go implementation:
 // https://github.com/grpc/grpc-go/blob/v1.57.0/internal/grpcutil/method.go#L26-L39
-func ParseFullMethod(fullMethod string) string {
-	if !strings.HasPrefix(fullMethod, "/") {
+func ParseFullMethod(input string) (fullMethod, service string) {
+	if !strings.HasPrefix(input, "/") {
 		// Invalid format, does not follow `/package.service/method`.
-		return fullMethod
+		return input, common.RPCUnknownString
 	}
-	name := fullMethod[1:]
+	methodName := input[1:]
 
-	// return in service/method format
-	return name
+	pos := strings.LastIndex(methodName, "/")
+	if pos < 0 {
+		return input, common.RPCUnknownString
+	}
+	return input, methodName[:pos]
 }
