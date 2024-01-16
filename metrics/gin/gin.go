@@ -17,7 +17,7 @@ func NewMetricsMiddleware() gin.HandlerFunc {
 		startTime := time.Now()
 		defer func() {
 			latency := time.Since(startTime)
-			endpoint := common.RPCUnknownString
+			requestPath := common.RPCUnknownString
 			host := common.RPCUnknownString
 			responseCode := -1
 
@@ -26,7 +26,7 @@ func NewMetricsMiddleware() gin.HandlerFunc {
 					host = ctx.Request.Host
 				}
 				if ctx.Request.URL != nil && ctx.Request.URL.Path != "" {
-					endpoint = ctx.Request.URL.Path
+					requestPath = ctx.Request.URL.Path
 				}
 			}
 
@@ -38,10 +38,11 @@ func NewMetricsMiddleware() gin.HandlerFunc {
 				"sdk":                  common.RPCSDKGin,
 				"request_protocol":     common.RPCProtocolHTTP,
 				"request_target":       host,
-				"request_path":         endpoint,
+				"request_path":         requestPath,
 				"grpc_response_status": strconv.Itoa(int(grpc.OK)),
 				"response_code":        strconv.Itoa(responseCode),
 			}).Observe(latency.Seconds() * 1000)
+			common.LRUCacheRPCReceiveRequestMetric.SetWithExpire(requestPath, nil, common.MaxIdleTime)
 		}()
 		// execute
 		ctx.Next()

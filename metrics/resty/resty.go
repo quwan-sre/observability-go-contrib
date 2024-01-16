@@ -48,10 +48,10 @@ func NewAfterResponse() func(c *resty.Client, r *resty.Response) error {
 		}
 
 		latency := time.Now().Sub(t)
-		endpoint := common.RPCUnknownString
+		requestPath := common.RPCUnknownString
 		host := common.RPCUnknownString
 		if req.RawRequest != nil && req.RawRequest.URL != nil {
-			endpoint = req.RawRequest.URL.Host + req.RawRequest.URL.Path
+			requestPath = req.RawRequest.URL.Host + req.RawRequest.URL.Path
 			host = req.RawRequest.URL.Host
 		}
 
@@ -59,10 +59,11 @@ func NewAfterResponse() func(c *resty.Client, r *resty.Response) error {
 			"sdk":                  common.RPCSDKResty,
 			"request_protocol":     common.RPCProtocolHTTP,
 			"request_target":       host,
-			"request_path":         endpoint,
+			"request_path":         requestPath,
 			"grpc_response_status": strconv.Itoa(int(grpc.OK)),
 			"response_code":        strconv.Itoa(r.StatusCode()),
 		}).Observe(latency.Seconds() * 1000)
+		common.LRUCacheRPCSendRequestMetric.SetWithExpire(requestPath, nil, common.MaxIdleTime)
 		return nil
 	}
 }

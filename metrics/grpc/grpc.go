@@ -37,6 +37,7 @@ func NewUnaryServerInterceptor() grpc.UnaryServerInterceptor {
 				"grpc_response_status": strconv.Itoa(int(code)),
 				"response_code":        "0",
 			}).Observe(latency.Seconds() * 1000)
+			common.LRUCacheRPCReceiveRequestMetric.SetWithExpire(requestPath, nil, common.MaxIdleTime)
 		}()
 
 		resp, err = handler(ctx, req)
@@ -75,6 +76,7 @@ func NewUnaryClientInterceptor() grpc.UnaryClientInterceptor {
 				"grpc_response_status": strconv.Itoa(int(code)),
 				"response_code":        "0",
 			}).Observe(latency.Seconds() * 1000)
+			common.LRUCacheRPCSendRequestMetric.SetWithExpire(requestPath, nil, common.MaxIdleTime)
 		}()
 
 		err = invoker(ctx, method, req, reply, cc, opts...)
@@ -122,6 +124,7 @@ func (w *wrapClientStream) SendMsg(m interface{}) error {
 			"grpc_response_status": strconv.Itoa(int(code)),
 			"response_code":        "0",
 		}).Observe(latency.Seconds() * 1000)
+		common.LRUCacheRPCSendRequestMetric.SetWithExpire(w.requestPath, nil, common.MaxIdleTime)
 	}()
 
 	err = w.ClientStream.SendMsg(m)
@@ -149,6 +152,7 @@ func (w *wrapClientStream) RecvMsg(m interface{}) error {
 			"grpc_response_status": strconv.Itoa(int(code)),
 			"response_code":        "0",
 		}).Observe(latency.Seconds() * 1000)
+		common.LRUCacheRPCReceiveRequestMetric.SetWithExpire(w.requestPath, nil, common.MaxIdleTime)
 	}()
 
 	err = w.ClientStream.RecvMsg(m)
@@ -183,6 +187,7 @@ func (w *wrapServerStream) SendMsg(m interface{}) error {
 			"grpc_response_status": strconv.Itoa(int(code)),
 			"response_code":        "0",
 		}).Observe(latency.Seconds() * 1000)
+		common.LRUCacheRPCSendRequestMetric.SetWithExpire(w.requestPath, nil, common.MaxIdleTime)
 	}()
 
 	err = w.ServerStream.SendMsg(m)
@@ -210,6 +215,7 @@ func (w *wrapServerStream) RecvMsg(m interface{}) error {
 			"grpc_response_status": strconv.Itoa(int(code)),
 			"response_code":        "0",
 		}).Observe(latency.Seconds() * 1000)
+		common.LRUCacheRPCReceiveRequestMetric.SetWithExpire(w.requestPath, nil, common.MaxIdleTime)
 	}()
 
 	err = w.ServerStream.RecvMsg(m)

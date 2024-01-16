@@ -46,5 +46,6 @@ func TestMain(t *testing.M) {
 	if err != nil {
 		log.Fatalf("test failed read body, err: %v", err)
 	}
+	resp.Body.Close()
 	fmt.Println(string(bodyBytes))
 }
