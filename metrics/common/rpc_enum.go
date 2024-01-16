@@ -10,3 +10,7 @@ const (
 	RPCProtocolHTTP = "http"
 	RPCProtocolGRPC = "grpc"
 )
+
+const (
+	RPCUnknownString = "unknown"
+)

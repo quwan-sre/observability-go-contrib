@@ -17,11 +17,17 @@ func NewMetricsMiddleware() gin.HandlerFunc {
 		startTime := time.Now()
 		defer func() {
 			latency := time.Since(startTime)
-			endpoint := ""
+			endpoint := common.RPCUnknownString
+			host := common.RPCUnknownString
 			responseCode := -1
 
-			if ctx != nil && ctx.Request != nil && ctx.Request.URL != nil {
-				endpoint = ctx.Request.URL.Path
+			if ctx != nil && ctx.Request != nil {
+				if ctx.Request.Host != "" {
+					host = ctx.Request.Host
+				}
+				if ctx.Request.URL != nil && ctx.Request.URL.Path != "" {
+					endpoint = ctx.Request.URL.Path
+				}
 			}
 
 			if ctx != nil && ctx.Writer != nil {
@@ -29,12 +35,13 @@ func NewMetricsMiddleware() gin.HandlerFunc {
 			}
 
 			common.DefaultRPCReceiveRequestMetric.With(prometheus.Labels{
-				"sdk":              common.RPCSDKGin,
-				"request_protocol": common.RPCProtocolHTTP,
-				"endpoint":         endpoint,
-				"rpc_status_code":  strconv.Itoa(int(grpc.OK)),
-				"http_status_code": strconv.Itoa(responseCode),
-			}).Observe(latency.Seconds())
+				"sdk":                  common.RPCSDKGin,
+				"request_protocol":     common.RPCProtocolHTTP,
+				"request_target":       host,
+				"request_path":         endpoint,
+				"grpc_response_status": strconv.Itoa(int(grpc.OK)),
+				"response_code":        strconv.Itoa(responseCode),
+			}).Observe(latency.Seconds() * 1000)
 		}()
 		// execute
 		ctx.Next()
