@@ -1,6 +1,7 @@
 package metrics
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/go-resty/resty/v2"
@@ -18,8 +19,8 @@ func TestRestyClient(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
-		for i := 0; i < 10; i++ {
-			restyClient.R().Get(tc)
+		for i := 0; i < 1005; i++ {
+			restyClient.R().Get(tc + fmt.Sprintf("_%d", i))
 		}
 	}
 }
