@@ -1,9 +1,9 @@
 package common
 
 import (
-	"github.com/bluele/gcache"
 	"time"
 
+	"github.com/bluele/gcache"
 	"github.com/prometheus/client_golang/prometheus"
 )
 
