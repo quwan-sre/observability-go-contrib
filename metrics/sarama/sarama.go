@@ -37,7 +37,7 @@ func (m *MetricsInterceptor) OnSend(msg *sarama.ProducerMessage) {
 	common.DefaultMQSendMsgMetric.With(prometheus.Labels{
 		"sdk":          common.MQSDKSarama,
 		"mq_type":      common.MQTypeKafka,
-		"mq_host":      m.brokers,
+		"mq_addr":      m.brokers,
 		"mq_topic":     msg.Topic,
 		"mq_partition": common.MQPartitionUnknown,
 	}).Inc()
@@ -47,7 +47,7 @@ func (m *MetricsInterceptor) OnConsume(msg *sarama.ConsumerMessage) {
 	common.DefaultMQReceiveMsgMetric.With(prometheus.Labels{
 		"sdk":          common.MQSDKSarama,
 		"mq_type":      common.MQTypeKafka,
-		"mq_host":      m.brokers,
+		"mq_addr":      m.brokers,
 		"mq_topic":     msg.Topic,
 		"mq_partition": strconv.FormatInt(int64(msg.Partition), 10),
 	}).Inc()
