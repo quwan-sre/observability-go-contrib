@@ -1,7 +1,6 @@
 package sarama
 
 import (
-	"fmt"
 	"sort"
 	"strconv"
 	"strings"
@@ -45,7 +44,6 @@ func (m *MetricsInterceptor) OnSend(msg *sarama.ProducerMessage) {
 }
 
 func (m *MetricsInterceptor) OnConsume(msg *sarama.ConsumerMessage) {
-	fmt.Println(string(msg.Value))
 	common.DefaultMQReceiveMsgMetric.With(prometheus.Labels{
 		"sdk":          common.MQSDKSarama,
 		"mq_type":      common.MQTypeKafka,
