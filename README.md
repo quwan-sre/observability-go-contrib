@@ -28,6 +28,7 @@
 - `apm_rpc_receive_request_duration_milliseconds_count`
 - `apm_rpc_receive_request_duration_milliseconds_sum`
 - `apm_rpc_receive_request_duration_milliseconds_bucket`
+
 包含 Labels：
 - `sdk`：插装 SDK，枚举值见 [quwan-sre/observability-go-contrib](https://github.com/quwan-sre/observability-go-contrib/blob/master/metrics/common/rpc_enum.go)
 - `request_protocol`：请求协议，枚举值：`http` | `grpc`；
@@ -56,13 +57,14 @@
 - `apm_rpc_send_request_duration_milliseconds_count`
 - `apm_rpc_send_request_duration_milliseconds_sum`
 - `apm_rpc_send_request_duration_milliseconds_bucket`
-  包含 Labels：
+
+包含 Labels：
 - `sdk`：插装 SDK，枚举值见 [quwan-sre/observability-go-contrib](https://github.com/quwan-sre/observability-go-contrib/blob/master/metrics/common/rpc_enum.go)；
-- `request_protocol`：请求协议，枚举值：http | grpc；
-- `request_target`：请求目标，HTTP 请求为域名，gRPC 请求为服务名，示例值：www.baidu.com | RouteGuide | unknown；
-- `request_path`：请求路径，示例值：127.0.0.1:8080/health | /routeguide.RouteGuide/RouteChat；
-- `grpc_response_status`：RPC 状态码，遵循 GRPC Core: Status codes and their use in gRPC，通常 0 为 OK；
-- `response_code`：HTTP 状态码，遵循 HTTP/1.1: Status Code Definitions，通常 200 为 OK。
+- `request_protocol`：请求协议，枚举值：`http` | `grpc`；
+- `request_target`：请求目标，HTTP 请求为域名，gRPC 请求为服务名，示例值：`www.baidu.com` | `RouteGuide` | `unknown`；
+- `request_path`：请求路径，示例值：`127.0.0.1:8080/health` | `/routeguide.RouteGuide/RouteChat`；
+- `grpc_response_status`：RPC 状态码，遵循 [GRPC Core: Status codes and their use in gRPC](https://grpc.github.io/grpc/core/md_doc_statuscodes.html)，通常 `0` 为 OK；
+- `response_code`：HTTP 状态码，遵循 [HTTP/1.1: Status Code Definitions](https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html)，通常 `200` 为 OK
 
 代码定义：
 ```go

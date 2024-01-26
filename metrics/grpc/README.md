@@ -52,4 +52,4 @@ func initEtcdClient() {
 }
 ```
 
-gRPC 支持 Unary 和 Stream 类型的 RPC 调用，如果其中的部分类型没有使用到，也可以不填加对应的 Interceptor。
+gRPC 支持 Unary 和 Stream 类型的 RPC 调用，如果其中的部分类型没有使用，也可以不添加对应的 Interceptor。
