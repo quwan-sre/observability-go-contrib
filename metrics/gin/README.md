@@ -27,7 +27,7 @@ import (
 func main() {
 	r := gin.New()
 
-	// 填加 Middleware
+	// 添加 Middleware
 	r.Use(metrics.NewMetricsMiddleware())
 
 	r.GET("/health", func(ctx *gin.Context) {
