@@ -59,7 +59,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v4
         with:
-          go-version: '1.17'
+          go-version: '1.19'
 
       - name: Test with coverage
         run: go test -v -cover -timeout 5m -coverpkg=./... -parallel 4 -covermode=atomic -gcflags=all=-l $(go list ./test/e2e/...) -coverprofile=coverage_full.txt
@@ -81,7 +81,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        go-version: [ '1.17', '1.18', '1.19' ]
+        go-version: ['1.19' ]
     timeout-minutes: 2
 
     services:
