@@ -8,8 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/go-redis/redis/v9"
-
+	"github.com/go-redis/redis/v8"
 	go_redis "github.com/quwan-sre/observability-go-contrib/metrics/go-redis"
 )
 

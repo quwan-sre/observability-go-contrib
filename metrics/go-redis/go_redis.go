@@ -6,9 +6,8 @@ import (
 	"strings"
 	"time"
 
-	rdsV9 "github.com/go-redis/redis/v9"
+	rdsV8 "github.com/go-redis/redis/v8"
 	"github.com/prometheus/client_golang/prometheus"
-
 	"github.com/quwan-sre/observability-go-contrib/metrics/common"
 )
 
@@ -22,7 +21,7 @@ var (
 	metricsCtxKey = metricsCtxType{}
 )
 
-func NewRedisHook(dst []string) rdsV9.Hook {
+func NewRedisHook(dst []string) rdsV8.Hook {
 	sort.Slice(dst, func(i, j int) bool {
 		if dst[i] < dst[j] {
 			return true
@@ -42,12 +41,12 @@ func NewRedisHook(dst []string) rdsV9.Hook {
 	}
 }
 
-func (h metricsHook) BeforeProcess(ctx context.Context, cmd rdsV9.Cmder) (context.Context, error) {
+func (h metricsHook) BeforeProcess(ctx context.Context, cmd rdsV8.Cmder) (context.Context, error) {
 	ctx = context.WithValue(ctx, metricsCtxKey, time.Now())
 	return ctx, nil
 }
 
-func (h metricsHook) AfterProcess(ctx context.Context, cmd rdsV9.Cmder) error {
+func (h metricsHook) AfterProcess(ctx context.Context, cmd rdsV8.Cmder) error {
 	val := ctx.Value(metricsCtxKey)
 	if val == nil {
 		return nil
@@ -60,7 +59,7 @@ func (h metricsHook) AfterProcess(ctx context.Context, cmd rdsV9.Cmder) error {
 
 	latency := time.Now().Sub(startTime)
 	responseStatus := common.CacheResponseStatusSuccess
-	if cmd.Err() != nil && cmd.Err() != rdsV9.Nil {
+	if cmd.Err() != nil && cmd.Err() != rdsV8.Nil {
 		responseStatus = common.CacheResponseStatusError
 	}
 
@@ -80,12 +79,12 @@ func (h metricsHook) AfterProcess(ctx context.Context, cmd rdsV9.Cmder) error {
 	return nil
 }
 
-func (h metricsHook) BeforeProcessPipeline(ctx context.Context, cmds []rdsV9.Cmder) (context.Context, error) {
+func (h metricsHook) BeforeProcessPipeline(ctx context.Context, cmds []rdsV8.Cmder) (context.Context, error) {
 	ctx = context.WithValue(ctx, metricsCtxKey, time.Now())
 	return ctx, nil
 }
 
-func (h metricsHook) AfterProcessPipeline(ctx context.Context, cmds []rdsV9.Cmder) error {
+func (h metricsHook) AfterProcessPipeline(ctx context.Context, cmds []rdsV8.Cmder) error {
 	val := ctx.Value(metricsCtxKey)
 	if val == nil {
 		return nil
@@ -99,7 +98,7 @@ func (h metricsHook) AfterProcessPipeline(ctx context.Context, cmds []rdsV9.Cmde
 	latency := time.Now().Sub(startTime)
 	responseStatus := common.CacheResponseStatusSuccess
 	for i := range cmds {
-		if cmds[i].Err() != nil && cmds[i].Err() != rdsV9.Nil {
+		if cmds[i].Err() != nil && cmds[i].Err() != rdsV8.Nil {
 			responseStatus = common.CacheResponseStatusError
 			break
 		}
